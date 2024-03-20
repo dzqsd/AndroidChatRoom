@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/home"
+            android:title="首页"
+            android:icon="@drawable/baseline_chat_bubble_24">
+    </item>
+
+    <item
+            android:id="@+id/addressList"
+            android:title="通讯录"
+            android:icon="@drawable/baseline_people_alt_24">
+    </item>
+
+    <item
+            android:id="@+id/personalCenter"
+            android:title="个人中心"
+            android:icon="@drawable/baseline_person_24">
+    </item>
+
+
+</menu>

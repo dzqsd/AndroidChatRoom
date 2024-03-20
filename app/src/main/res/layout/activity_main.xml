@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".activities.MainActivity">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchorGravity="center">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_200sdp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:text="登录成功" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/backToSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:text="@string/sign_in"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold"
+        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchorGravity="center" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <!--    <com.google.android.material.appbar.AppBarLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:fitsSystemWindows="true">-->
+
+    <!--        <com.google.android.material.appbar.MaterialToolbar-->
+    <!--            android:id="@+id/toolbar"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="?attr/actionBarSize" />-->
+
+    <!--    </com.google.android.material.appbar.AppBarLayout>-->
+
+    <!--    <include layout="@layout/content_main" />-->
+
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--        android:id="@+id/fab"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="bottom|end"-->
+    <!--        android:layout_marginEnd="@dimen/fab_margin"-->
+    <!--        android:layout_marginBottom="16dp"-->
+    <!--        app:srcCompat="@android:drawable/ic_dialog_email" />-->
+
