@@ -17,14 +17,14 @@
             app:titleTextColor="@color/white">
 
 
-        <ImageButton
-                android:id="@+id/logoutButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/baseline_logout_24"
-                android:background="@color/primary"
-                android:layout_gravity="end"
-                android:layout_marginEnd="16dp"/>
+<!--        <ImageButton-->
+<!--                android:id="@+id/logoutButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/baseline_logout_24"-->
+<!--                android:background="@color/primary"-->
+<!--                android:layout_gravity="end"-->
+<!--                android:layout_marginEnd="16dp"/>-->
 
         <!--        cc帅脸-->
         <!--        <ImageView-->

@@ -51,14 +51,7 @@ public class PersonalCenterFragment extends Fragment {
     }
 
     private void setListeners() {
-        // 为退出按钮设置点击事件
-//        binding.logoutButton.setOnClickListener(v -> {
-//            Toast.makeText(getContext(), "退出登录", Toast.LENGTH_SHORT).show();
-//            // 跳转到登录界面
-//            startActivity(new Intent(requireContext(), SignInActivity.class));
-//            // 结束当前的 Activity
-//            //requireActivity().finish();
-//        });
+
     }
 
     @Override
