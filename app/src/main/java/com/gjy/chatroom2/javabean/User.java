@@ -7,13 +7,7 @@ public class User {
 
     public static User userInfo;
 
-    public String getSignature() {
-        return signature;
-    }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
 
     public static User getUserInfo() {
         return userInfo;
