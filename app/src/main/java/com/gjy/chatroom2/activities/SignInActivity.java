@@ -1,6 +1,7 @@
 package com.gjy.chatroom2.activities;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,10 +14,6 @@ import android.widget.Toast;
 import com.gjy.chatroom2.Mysqliteopenhelper;
 import com.gjy.chatroom2.R;
 import com.gjy.chatroom2.databinding.ActivitySignInBinding;
-import com.gjy.chatroom2.databinding.ActivitySignUpBinding;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     //登录界面
@@ -36,7 +33,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(binding.getRoot());
         setListeners();
         find();
+
     }
+
 
     private void find() {
         login = findViewById(R.id.buttonSignIn);
@@ -51,6 +50,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         //Toast.makeText(this, "登录被点了!", Toast.LENGTH_SHORT).show();
+        //Log.d("myTest", "login success!");
         String s1 = name.getText().toString();
         String s2 = password.getText().toString();
         //User user = new User(s1, s2);
@@ -85,6 +85,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, "登录失败!", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void setListeners() {
         binding.textCreateNewAccount.setOnClickListener(v -> {
