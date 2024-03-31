@@ -90,6 +90,7 @@
 
     </LinearLayout>
 
+
     <ListView
             android:id="@+id/showmsg"
             android:layout_width="0dp"
@@ -100,6 +101,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleview"
             android:transcriptMode="alwaysScroll"
-            android:divider="#00000000"/>
+            android:divider="#00000000"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

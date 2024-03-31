@@ -533,6 +533,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
         sendMessageText.setText("");
     }
 
+
     class MessageAdapter extends BaseAdapter {
 
         @Override
@@ -557,99 +558,126 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             if (view == null) {
                 view = LayoutInflater.from(ChatRoomActivity.this).inflate(R.layout.chart_item, null);
                 holder = new MessageHolder();
-                holder.left = (TextView) view.findViewById(R.id.itemleft);
-                holder.right = (TextView) view.findViewById(R.id.itemright);
-                holder.lefttime = (TextView) view.findViewById(R.id.itemtimeleft);
-                holder.righttime = (TextView) view.findViewById(R.id.itemtimeright);
+                // 初始化控件
+                holder.lefttime = view.findViewById(R.id.itemtimeleft);
+                holder.righttime = view.findViewById(R.id.itemtimeright);
+                holder.left = view.findViewById(R.id.itemleft);
+                holder.right = view.findViewById(R.id.itemright);
+                holder.rightimgtime = view.findViewById(R.id.rightimgtime);
+                holder.leftimgtime = view.findViewById(R.id.leftimgtime);
+                holder.rightimg = view.findViewById(R.id.rightimg);
+                holder.leftimg = view.findViewById(R.id.leftimg);
 
-                holder.rightimgtime = (TextView) view.findViewById(R.id.rightimgtime);
-                holder.leftimgtime = (TextView) view.findViewById(R.id.leftimgtime);
-                holder.rightimg = (ImageView) view.findViewById(R.id.rightimg);
-                holder.leftimg = (ImageView) view.findViewById(R.id.leftimg);
+                holder.avatarRight = view.findViewById(R.id.avatarRight);
+                holder.avatarLeft = view.findViewById(R.id.avatarLeft);
+                holder.usernameRight = view.findViewById(R.id.usernameRight);
+                holder.usernameLeft = view.findViewById(R.id.usernameLeft);
 
                 view.setTag(holder);
             } else {
                 holder = (MessageHolder) view.getTag();
             }
             MessageInfor mi = getItem(i);
+
             //显示
             if (mi.getUserID() == mID) {
-                //id相等
+                //id相等,自己发送的消息
+
+                holder.usernameRight.setVisibility(View.VISIBLE); // 显示用户名
+                holder.avatarRight.setVisibility(View.VISIBLE); // 显示头像
+                holder.usernameRight.setText("我"); //发送方用户名
+                holder.avatarRight.setImageResource(R.drawable.cc_face); // 设置头像图标
+
                 if (mi.getType().equals("0")) {
                     //图片
-                    holder.leftimg.setVisibility(View.GONE);
-                    holder.leftimgtime.setVisibility(View.GONE);
-                    holder.rightimg.setVisibility(View.VISIBLE);
                     holder.rightimgtime.setVisibility(View.VISIBLE);
-                    holder.rightimg.setImageBitmap(convertStringToIcon(mi.getMsg()));
+                    holder.rightimg.setVisibility(View.VISIBLE);
                     holder.rightimgtime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                    holder.rightimg.setImageBitmap(convertStringToIcon(mi.getMsg()));
 
-                    holder.left.setVisibility(View.GONE);
-                    holder.lefttime.setVisibility(View.GONE);
-                    holder.right.setVisibility(View.GONE);
-                    holder.righttime.setVisibility(View.GONE);
+                    // 隐藏左侧布局
+                    hideLeftViews(holder);
 
                 } else if (mi.getType().equals("1")) {
-                    //消息
-                    holder.leftimg.setVisibility(View.GONE);
-                    holder.leftimgtime.setVisibility(View.GONE);
-                    holder.rightimg.setVisibility(View.GONE);
-                    holder.rightimgtime.setVisibility(View.GONE);
-
-                    holder.left.setVisibility(View.GONE);
-                    holder.lefttime.setVisibility(View.GONE);
-                    holder.right.setVisibility(View.VISIBLE);
+                    // 文字消息
                     holder.righttime.setVisibility(View.VISIBLE);
-                    holder.right.setText(mi.getMsg());
+                    holder.right.setVisibility(View.VISIBLE);
                     holder.righttime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                    holder.right.setText(mi.getMsg());
+
+                    // 隐藏左侧布局
+                    hideLeftViews(holder);
                 }
 
 
             } else {
-                if (mi.getType().equals("0")) {
-                    //图片
-                    holder.leftimg.setVisibility(View.VISIBLE);
-                    holder.leftimgtime.setVisibility(View.VISIBLE);
-                    holder.rightimg.setVisibility(View.GONE);
-                    holder.rightimgtime.setVisibility(View.GONE);
-                    holder.leftimg.setImageBitmap(convertStringToIcon(mi.getMsg()));
-                    holder.leftimgtime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                // 别人的消息，需要显示左侧的布局
+                holder.usernameLeft.setVisibility(View.VISIBLE); // 显示用户名
+                holder.avatarLeft.setVisibility(View.VISIBLE); // 显示头像
+                holder.usernameLeft.setText("别人"); // 其他人的用户名
+                holder.avatarLeft.setImageResource(R.drawable.cc_face); // 设置头像图标
 
-                    holder.left.setVisibility(View.GONE);
-                    holder.lefttime.setVisibility(View.GONE);
-                    holder.right.setVisibility(View.GONE);
-                    holder.righttime.setVisibility(View.GONE);
+                if (mi.getType().equals("0")) {
+                    // 图片消息
+                    holder.leftimgtime.setVisibility(View.VISIBLE);
+                    holder.leftimg.setVisibility(View.VISIBLE);
+                    holder.leftimgtime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                    holder.leftimg.setImageBitmap(convertStringToIcon(mi.getMsg()));
+
+                    // 隐藏右侧布局
+                    hideRightViews(holder);
 
                 } else if (mi.getType().equals("1")) {
-                    //消息
-                    holder.leftimg.setVisibility(View.GONE);
-                    holder.leftimgtime.setVisibility(View.GONE);
-                    holder.rightimg.setVisibility(View.GONE);
-                    holder.rightimgtime.setVisibility(View.GONE);
-
-                    holder.left.setVisibility(View.VISIBLE);
+                    // 文字消息
                     holder.lefttime.setVisibility(View.VISIBLE);
-                    holder.right.setVisibility(View.GONE);
-                    holder.righttime.setVisibility(View.GONE);
-                    holder.left.setText(mi.getMsg());
+                    holder.left.setVisibility(View.VISIBLE);
                     holder.lefttime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                    holder.left.setText(mi.getMsg());
+
+                    // 隐藏右侧布局
+                    hideRightViews(holder);
                 }
             }
+
             return view;
+        }
+
+        // 隐藏左侧布局
+        private void hideLeftViews(MessageHolder holder) {
+            holder.lefttime.setVisibility(View.GONE);
+            holder.left.setVisibility(View.GONE);
+            holder.leftimgtime.setVisibility(View.GONE);
+            holder.leftimg.setVisibility(View.GONE);
+            holder.usernameLeft.setVisibility(View.GONE);
+            holder.avatarLeft.setVisibility(View.GONE);
+        }
+
+        // 隐藏右侧布局
+        private void hideRightViews(MessageHolder holder) {
+            holder.righttime.setVisibility(View.GONE);
+            holder.right.setVisibility(View.GONE);
+            holder.rightimgtime.setVisibility(View.GONE);
+            holder.rightimg.setVisibility(View.GONE);
+            holder.usernameRight.setVisibility(View.GONE);
+            holder.avatarRight.setVisibility(View.GONE);
         }
     }
 
 
     class MessageHolder {
-        public TextView left;
-        public TextView right;
-        public TextView lefttime;
-        public TextView righttime;
-        private TextView rightimgtime;
-        private TextView leftimgtime;
-        private ImageView rightimg;
-        private ImageView leftimg;
+        public TextView left; // 左侧消息文本
+        public TextView right; // 右侧消息文本
+        public TextView lefttime; // 左侧消息时间
+        public TextView righttime; // 右侧消息时间
+        public TextView rightimgtime; // 右侧图片消息时间
+        public TextView leftimgtime; // 左侧图片消息时间
+        public ImageView rightimg; // 右侧图片
+        public ImageView leftimg; // 左侧图片
 
+        public ImageView avatarRight; // 右侧头像
+        public ImageView avatarLeft; // 左侧头像
+        public TextView usernameRight; // 右侧用户名
+        public TextView usernameLeft; // 左侧用户名
     }
 
 
