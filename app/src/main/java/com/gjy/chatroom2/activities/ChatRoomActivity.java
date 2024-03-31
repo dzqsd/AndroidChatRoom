@@ -99,6 +99,22 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
 
         //设置点击事件
 
+        //点击toolbar返回按钮，回到首页
+        findViewById(R.id.toolbar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //结束当前Activity，返回到上一个Activity
+                Intent intent = new Intent(getApplicationContext(), UserActivity.class);
+                //传递参数，显示首页
+                //UserActivity中会处理传递的参数
+                intent.putExtra("showHome", true);
+                startActivity(intent);
+
+                finish();
+
+            }
+        });
+
         // 启动服务器按钮点击事件
         Button btn_startServer = (Button) findViewById(R.id.btn_startServer);
         btn_startServer.setOnClickListener(new View.OnClickListener() {
@@ -475,9 +491,11 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                     try {
                         JSONObject json = new JSONObject(message1);
                         if (json.getLong("id") != mID) {
-                            if (json.getString("isimg").equals("1")) {//不为图片
+                            if (json.getString("isimg").equals("1")) {
+                                //不为图片
                                 datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
-                            } else if (json.getString("isimg").equals("0")) {//为图片
+                            } else if (json.getString("isimg").equals("0")) {
+                                //为图片
                                 datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
                             }
                         }

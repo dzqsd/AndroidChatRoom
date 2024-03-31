@@ -44,6 +44,9 @@ public class UserActivity extends AppCompatActivity {
             // 如果传递过来的标志为 true，则显示个人中心页面
             bottomNavigationView.setSelectedItemId(R.id.personalCenter);
             selectFragment(2);
+        } else if (intent != null && intent.getBooleanExtra("showHome", false)) {
+            bottomNavigationView.setSelectedItemId(R.id.home);
+            selectFragment(0);
         }
 
         //bottomNavigationView的点击事件
