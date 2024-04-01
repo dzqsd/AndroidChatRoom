@@ -6,6 +6,15 @@ public class MessageInfor {
     private Long time;
     private Long userID;
     private String type;
+    private String username;
+
+    public MessageInfor(String msg, Long time, Long userID, String type, String username) {
+        this.msg = msg;
+        this.time = time;
+        this.userID = userID;
+        this.type = type;
+        this.username = username;
+    }
 
     public MessageInfor(String msg, Long time, Long userID, String type) {
         this.msg = msg;
@@ -52,5 +61,13 @@ public class MessageInfor {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -524,7 +525,13 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(ChatRoomActivity.this, "发送消息不能为空", Toast.LENGTH_LONG).show();
             return;
         }
+
+        //从SharedPreferences获取用户名
+        SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "unknown");
+
         long Ltimes = System.currentTimeMillis();
+
         MessageInfor m = new MessageInfor(message, Ltimes, mID, "1");//消息 时间戳 id
         userSendMsg = "{\"isimg\":\"1\",\"msg\":\"" + sendMessageText.getText().toString() + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\"}";
         datas.add(m);
