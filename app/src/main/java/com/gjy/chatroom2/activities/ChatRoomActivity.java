@@ -772,6 +772,12 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
         String username = sharedPreferences.getString("username", "unknown");
 
         Bitmap bm = BitmapFactory.decodeFile(imagePath);
+        if (bm == null) {
+            // 处理图片加载失败的情况，例如显示错误消息或使用默认图片
+            Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show();
+            return; // 直接返回，避免后续操作
+        }
+
         bm = resizeBitmap(bm, 400, 400, true);
         long Ltimes = System.currentTimeMillis();
         String imgString = convertIconToString(bm);
