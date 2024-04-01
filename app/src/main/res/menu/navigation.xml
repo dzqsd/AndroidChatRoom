@@ -9,8 +9,8 @@
 
     <item
             android:id="@+id/addressList"
-            android:title="通讯录"
-            android:icon="@drawable/baseline_people_alt_24">
+            android:title="视频通话"
+            android:icon="@drawable/baseline_videocam_24">
     </item>
 
     <item
