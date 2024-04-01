@@ -6,7 +6,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:layout_height="match_parent"
-        tools:context=".fragment.AddressListFragment">
+        tools:context=".fragment.VideoFragment"
+        tools:ignore="MissingDefaultResource">
 
     <androidx.appcompat.widget.Toolbar
 

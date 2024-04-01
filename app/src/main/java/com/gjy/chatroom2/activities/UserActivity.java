@@ -9,18 +9,16 @@ import android.os.Bundle;
 
 import androidx.fragment.app.FragmentTransaction;
 import com.gjy.chatroom2.R;
-import com.gjy.chatroom2.databinding.ActivitySignInBinding;
 import com.gjy.chatroom2.databinding.ActivityUserBinding;
-import com.gjy.chatroom2.fragment.AddressListFragment;
+import com.gjy.chatroom2.fragment.VideoFragment;
 import com.gjy.chatroom2.fragment.HomeFragment;
 import com.gjy.chatroom2.fragment.PersonalCenterFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import org.jetbrains.annotations.NotNull;
 
 public class UserActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private HomeFragment homeFragment;
-    private AddressListFragment addressListFragment;
+    private VideoFragment videoFragment;
     private PersonalCenterFragment personalCenterFragment;
     private ActivityUserBinding binding;
 
@@ -79,11 +77,11 @@ public class UserActivity extends AppCompatActivity {
                 fragmentTransaction.show(homeFragment);
             }
         } else if (position == 1) {
-            if (addressListFragment == null) {
-                addressListFragment = new AddressListFragment();
-                fragmentTransaction.add(R.id.content, addressListFragment);
+            if (videoFragment == null) {
+                videoFragment = new VideoFragment();
+                fragmentTransaction.add(R.id.content, videoFragment);
             } else {
-                fragmentTransaction.show(addressListFragment);
+                fragmentTransaction.show(videoFragment);
             }
         } else if (position == 2) {
             if (personalCenterFragment == null) {
@@ -102,8 +100,8 @@ public class UserActivity extends AppCompatActivity {
         if (homeFragment != null) {
             fragmentTransaction.hide(homeFragment);
         }
-        if (addressListFragment != null) {
-            fragmentTransaction.hide(addressListFragment);
+        if (videoFragment != null) {
+            fragmentTransaction.hide(videoFragment);
         }
         if (personalCenterFragment != null) {
             fragmentTransaction.hide(personalCenterFragment);
