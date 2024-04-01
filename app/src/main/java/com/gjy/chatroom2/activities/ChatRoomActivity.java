@@ -1,6 +1,7 @@
 package com.gjy.chatroom2.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -186,26 +187,33 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
         btn_sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+                String username = sharedPreferences.getString("username", "unknown"); // 获取用户名
+
+                message = sendMessageText.getText().toString();
+                if (message == null || "".equals(message)) {
+                    Toast.makeText(ChatRoomActivity.this, "发送消息不能为空", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                long Ltimes = System.currentTimeMillis();
+
                 if (isServer) {
                     //服务器
-                    message = sendMessageText.getText().toString();
-                    if (message == null || "".equals(message)) {
-                        Toast.makeText(ChatRoomActivity.this, "发送消息不能为空", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    long Ltimes = System.currentTimeMillis();
-                    message = sendMessageText.getText().toString();
-                    datas.add(new MessageInfor(message, Ltimes, mID, "1"));
-                    sendMessage("{\"isimg\":\"1\",\"msg\":\"" + message + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\",\"peoplen\":\"" + "当前在线人数[" + (allOut.size() + 1) + "]" + "\"}");
+                    MessageInfor m = new MessageInfor(message, Ltimes, mID, "1", username);
+                    datas.add(m);
 
-                    //清空输入框文字
-                    sendMessageText.setText("");
-
+                    //sendMessage("{\"isimg\":\"1\",\"msg\":\"" + message + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\",\"peoplen\":\"" + "当前在线人数[" + (allOut.size() + 1) + "]" + "\"}");
+                    @SuppressLint("DefaultLocale")
+                    String messageJson = String.format("{\"isimg\":\"1\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\", \"peoplen\":\"当前在线人数[%d]\"}",
+                            message, Ltimes, mID, username, (allOut.size() + 1));
+                    sendMessage(messageJson);
 
                 } else {
                     //客户端
                     sendMsgText();
                 }
+                //清空输入框文字
+                sendMessageText.setText("");
             }
         });
 
@@ -368,15 +376,36 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
 
                     try {
                         JSONObject json = new JSONObject(message);
-                        if (json.getString("isimg").equals("1")) {
-                            //不为图片
-                            datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
-                        } else if (json.getString("isimg").equals("0")) {
-                            //图片
-                            datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
-                        }
-                        titletext = json.getString("peoplen");
+                        String messageType = json.getString("isimg");
+                        String msgContent = json.getString("msg");
+                        long times = json.getLong("times");
+                        long id = json.getLong("id");
+                        String username = json.optString("username", "unknown"); // 使用optString以避免JSONException
+
+                        // 根据消息类型创建MessageInfor对象，现在包括username参数
+                        MessageInfor m = new MessageInfor(msgContent, times, id, messageType, username);
+
+                        // 更新datas列表应在主线程中执行
+                        final MessageInfor finalM = m;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                datas.add(finalM);
+                                messageAdapter.notifyDataSetChanged(); // 通知数据源发生变化
+                            }
+                        });
+
+//                        if (json.getString("isimg").equals("1")) {
+//                            //不为图片
+//                            datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
+//                        } else if (json.getString("isimg").equals("0")) {
+//                            //图片
+//                            datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
+//                        }
+
+                        titletext = json.optString("peoplen", "当前在线人数[未知]"); // 使用optString以避免JSONException
                         handler.sendEmptyMessage(1);
+
                         //messageAdapter.notifyDataSetChanged();//通知数据源发生变化
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -487,22 +516,34 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                 InputStreamReader isr = new InputStreamReader(in, "UTF-8");//以utf-8读
                 BufferedReader br = new BufferedReader(isr);
                 String message1 = br.readLine();
+
                 while (message1 != null) {
                     Log.i("测试4", message1);
                     try {
                         JSONObject json = new JSONObject(message1);
+
                         if (json.getLong("id") != mID) {
-                            if (json.getString("isimg").equals("1")) {
-                                //不为图片
-                                datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
-                            } else if (json.getString("isimg").equals("0")) {
-                                //为图片
-                                datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
-                            }
+                            String messageType = json.getString("isimg"); // 根据isimg判断消息类型
+                            String msgContent = json.getString("msg");
+                            long times = json.getLong("times");
+                            long id = json.getLong("id");
+                            String username = json.optString("username", "unknown"); // 解析用户名
+
+                            // 根据是否为图片创建MessageInfor对象，现在包括username参数
+                            MessageInfor m = new MessageInfor(msgContent, times, id, messageType, username);
+
+                            // 由于涉及UI更新，确保在主线程执行
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    datas.add(m);
+                                    messageAdapter.notifyDataSetChanged(); // 通知数据源发生变化
+                                }
+                            });
+
+                            titletext = json.optString("peoplen", "当前在线人数[未知]");
+                            handler.sendEmptyMessage(1); // 可能需要更新UI，例如标题
                         }
-                        titletext = json.getString("peoplen");
-                        handler.sendEmptyMessage(1);
-                        //messageAdapte.notifyDataSetChanged();//通知数据源发生变化
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -519,6 +560,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
     /**
      * 发送消息
      */
+    @SuppressLint("DefaultLocale")
     private void sendMsgText() {
         message = sendMessageText.getText().toString();
         if (message == null || "".equals(message)) {
@@ -531,9 +573,14 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
         String username = sharedPreferences.getString("username", "unknown");
 
         long Ltimes = System.currentTimeMillis();
+        MessageInfor m = new MessageInfor(message, Ltimes, mID, "1", username);
+        //MessageInfor m = new MessageInfor(message, Ltimes, mID, "1");//消息 时间戳 id
 
-        MessageInfor m = new MessageInfor(message, Ltimes, mID, "1");//消息 时间戳 id
-        userSendMsg = "{\"isimg\":\"1\",\"msg\":\"" + sendMessageText.getText().toString() + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\"}";
+        //userSendMsg = "{\"isimg\":\"1\",\"msg\":\"" + sendMessageText.getText().toString() + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\"}";
+        // 在发送的JSON消息中包含username
+        userSendMsg = String.format("{\"isimg\":\"1\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",
+                message, Ltimes, mID, username);
+
         datas.add(m);
         messageAdapter.notifyDataSetChanged();//通知数据源发生变化
 
@@ -562,6 +609,8 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             MessageHolder holder = null;
+
+            //初始化holder
             if (view == null) {
                 view = LayoutInflater.from(ChatRoomActivity.this).inflate(R.layout.chart_item, null);
                 holder = new MessageHolder();
@@ -584,6 +633,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             } else {
                 holder = (MessageHolder) view.getTag();
             }
+
             MessageInfor mi = getItem(i);
 
             //显示
@@ -591,8 +641,10 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                 //id相等,自己发送的消息
 
                 holder.usernameRight.setVisibility(View.VISIBLE); // 显示用户名
-                holder.avatarRight.setVisibility(View.VISIBLE); // 显示头像
                 holder.usernameRight.setText("我"); //发送方用户名
+                holder.usernameRight.setText(mi.getUsername()); // 使用实际的用户名
+
+                holder.avatarRight.setVisibility(View.VISIBLE); // 显示头像
                 holder.avatarRight.setImageResource(R.drawable.cc_face); // 设置头像图标
 
                 if (mi.getType().equals("0")) {
@@ -620,8 +672,10 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             } else {
                 // 别人的消息，需要显示左侧的布局
                 holder.usernameLeft.setVisibility(View.VISIBLE); // 显示用户名
-                holder.avatarLeft.setVisibility(View.VISIBLE); // 显示头像
                 holder.usernameLeft.setText("别人"); // 其他人的用户名
+                holder.usernameLeft.setText(mi.getUsername()); // 使用实际的用户名
+
+                holder.avatarLeft.setVisibility(View.VISIBLE); // 显示头像
                 holder.avatarLeft.setImageResource(R.drawable.cc_face); // 设置头像图标
 
                 if (mi.getType().equals("0")) {
@@ -712,21 +766,27 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
      *
      * @param imagePath 图片路径
      */
+    @SuppressLint("DefaultLocale")
     private void activityImage(String imagePath) {
+        SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "unknown");
 
         Bitmap bm = BitmapFactory.decodeFile(imagePath);
         bm = resizeBitmap(bm, 400, 400, true);
         long Ltimes = System.currentTimeMillis();
         String imgString = convertIconToString(bm);
         imgString = imgString.replace("\n", "");
-        datas.add(new MessageInfor(imgString, Ltimes, mID, "0"));
+
+        datas.add(new MessageInfor(imgString, Ltimes, mID, "0", username));
 
         if (isServer) {
             //服务器
-            sendMessage("{\"isimg\":\"0\",\"msg\":\"" + imgString + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\"}");
+            sendMessage(String.format("{\"isimg\":\"0\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",
+                    imgString, Ltimes, mID, username));
         } else {
             //客户端
-            userSendMsg = "{\"isimg\":\"0\",\"msg\":\"" + imgString + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\"}";
+            userSendMsg = String.format("{\"isimg\":\"0\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",
+                    imgString, Ltimes, mID, username);
         }
 
 
