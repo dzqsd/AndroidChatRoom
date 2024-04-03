@@ -24,19 +24,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.gjy.chatroom2.DbContect;
 import com.gjy.chatroom2.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.gjy.chatroom2.databinding.ActivityMainBinding;
-
-import android.database.sqlite.SQLiteDatabase;
 import com.gjy.chatroom2.javabean.MessageInfor;
 import org.json.JSONException;
 import org.json.JSONObject;

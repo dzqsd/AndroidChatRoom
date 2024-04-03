@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.gjy.chatroom2.DbContect;
 import com.gjy.chatroom2.R;
 
 import androidx.appcompat.app.AppCompatActivity;
