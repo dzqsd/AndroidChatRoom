@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 builder.setView(R.layout.start_server);
                 builder.setCancelable(false);//是否为可取消
                 // 加载控件
-                EditText editprot = (EditText) layout.findViewById(R.id.editprot);
+                EditText editprot = (EditText) layout.findViewById(R.id.editPort);
 
                 new AlertDialog.Builder(MainActivity.this)
                         .setView(layout)  // 设置显示内容

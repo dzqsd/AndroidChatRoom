@@ -1,5 +1,7 @@
 package com.gjy.chatroom2.activities;
 
+import android.content.SharedPreferences;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.gjy.chatroom2.R;
@@ -26,9 +28,10 @@ public class VideoChatActivity extends AppCompatActivity {
     private String appId = "dc06c3be8bc74c8d830fbff83eb4635d";
     // 填写频道名
     private String channelName = "gjy";
-    // 填写声网控制台中生成的临时 Token
-    private String token =
-            "007eJxTYJhcunpGhy5XpHJl2dlZgUrfLtuVHwlJ7l6w0TrIymrxRQUFhpRkA7Nk46RUi6Rkc5NkixQLY4O0pLQ0C+PUJBMzY9OUM0VcaQ2BjAyiKXksjAwQCOIzM6RnVTIwAAD4jR4Q";
+
+    // 填写声网控制台中生成的临时 Token,通过VideoFragment中的输入Token获取
+    private String token ;
+    private SharedPreferences mSharedPreferences;
 
     private RtcEngine mRtcEngine;
 
@@ -124,6 +127,12 @@ public class VideoChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_chat);
+
+        //获取SharedPreferences中的Token
+        mSharedPreferences = getSharedPreferences("Token", MODE_PRIVATE);
+        token = mSharedPreferences.getString("Token", "none");
+        Toast.makeText(this, "Token:" + token, Toast.LENGTH_SHORT).show();
+
         // 如果已经授权，则初始化 RtcEngine 并加入频道
         if (checkPermissions()) {
             initializeAndJoinChannel();

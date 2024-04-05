@@ -5,21 +5,20 @@
     android:background="#F3F3F6">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="#FFFFBB33"
-        android:text="连接服务器"
-        android:textColor="#090909"
-        android:gravity="center"
-        android:textSize="24dp"
-        android:textStyle="bold"
-        android:scaleType="center" />
-
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/primary"
+            android:text="连接服务器"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:scaleType="center"/>
     <EditText
         android:id="@+id/editIpv4Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="ipv4"
+        android:hint="请输入ipv4地址"
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
@@ -35,7 +34,7 @@
         android:layout_marginRight="50dp"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:hint="端口号" />
+        android:hint="请输入端口号" />
 
 
 </LinearLayout>

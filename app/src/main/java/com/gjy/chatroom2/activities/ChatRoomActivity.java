@@ -30,16 +30,7 @@ import com.gjy.chatroom2.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.gjy.chatroom2.databinding.ActivityMainBinding;
-
-import android.database.sqlite.SQLiteDatabase;
 import com.gjy.chatroom2.javabean.MessageInfor;
-import org.checkerframework.checker.units.qual.C;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -116,7 +107,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        // 启动服务器按钮点击事件
+        // 开启服务器按钮点击事件
         Button btn_startServer = (Button) findViewById(R.id.btn_startServer);
         btn_startServer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,16 +120,17 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                 builder.setView(R.layout.start_server);
                 builder.setCancelable(false);//是否为可取消
                 // 加载控件
-                EditText editprot = (EditText) layout.findViewById(R.id.editprot);
+                EditText editPort = (EditText) layout.findViewById(R.id.editPort);
 
                 new AlertDialog.Builder(ChatRoomActivity.this)
                         .setView(layout)  // 设置显示内容
                         .setPositiveButton("开启", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startPort = Integer.valueOf(editprot.getText().toString());
+                                startPort = Integer.valueOf(editPort.getText().toString());
                                 mID = System.currentTimeMillis();
                                 ServerInit();
+                                Toast.makeText(ChatRoomActivity.this, "服务器已启动，端口号：" + startPort, Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton("取消", null)
@@ -172,7 +164,11 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                                 ConnectServerData[1] = editPortText.getText().toString();
                                 Toast.makeText(ChatRoomActivity.this, "正在连接服务器" + ConnectServerData[0] + ":" + ConnectServerData[1]
                                         , Toast.LENGTH_SHORT).show();
-                                ConnectSever();
+
+                                boolean isConnected = ConnectSever();
+                                if(isConnected){
+                                    Toast.makeText(ChatRoomActivity.this, "连接服务器成功", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         })
                         .setNegativeButton("取消", null)
