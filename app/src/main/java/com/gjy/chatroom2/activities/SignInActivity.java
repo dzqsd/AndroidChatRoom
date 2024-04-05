@@ -17,6 +17,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private Button login;
     private EditText inputName, inputPassword;
     private CheckBox checkBox;
+    private TextView goWelcome;
     private boolean is_login;
     private SharedPreferences mSharedPreferences;
 
@@ -55,6 +56,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+
+        //goWelcome点击事件
+        goWelcome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignInActivity.this, WelcomeActivity.class));
+            }
+        });
     }
 
 
@@ -64,6 +73,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         inputName = findViewById(R.id.inputName);
         inputPassword = findViewById(R.id.inputPassword);
         checkBox = findViewById(R.id.checkbox);
+        goWelcome = findViewById(R.id.goWelcome);
 
         login.setOnClickListener(this);
     }
