@@ -73,19 +73,16 @@
                 android:layout_marginTop="10dp"
                 android:layout_gravity="left"
                 android:text="记住密码"
+                android:textStyle="bold"
                 android:textSize="15sp"
                 tools:ignore="RtlHardcoded"/>
-
-
-
-
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSignIn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_50sdp"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="20dp"
             android:text="@string/sign_in"
             android:textColor="@color/white"
             android:textSize="@dimen/_13ssp"
