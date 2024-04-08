@@ -69,6 +69,7 @@ public class VideoChatActivity extends AppCompatActivity {
         // 创建一个 SurfaceView 对象，并将其作为 FrameLayout 的子对象
         FrameLayout container = findViewById(R.id.local_video_view_container);
         SurfaceView surfaceView = new SurfaceView(getBaseContext());
+        surfaceView.setZOrderMediaOverlay(true);
         container.addView(surfaceView);
         // 将 SurfaceView 对象传入声网实时互动 SDK，设置本地视图
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
@@ -87,7 +88,7 @@ public class VideoChatActivity extends AppCompatActivity {
     private void setupRemoteVideo(int uid) {
         FrameLayout container = findViewById(R.id.remote_video_view_container);
         SurfaceView surfaceView = new SurfaceView(getBaseContext());
-        surfaceView.setZOrderMediaOverlay(true);
+        //surfaceView.setZOrderMediaOverlay(true);
         container.addView(surfaceView);
         // 将 SurfaceView 对象传入声网实时互动 SDK，设置远端视图
         mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
