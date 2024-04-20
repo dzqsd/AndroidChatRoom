@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -51,8 +50,8 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
     private EditText sendMessageText;
     private int startPort;
     private boolean isConnected = true, isServer = false;
-    private String message = "", userSendMsg = "", titletext = "";
-    private String[] ConnectServerData = new String[2];// 0.ipv4 1.端口号
+    private String message = "", userSendMsg = "", titleText = "";
+    private String[] connectServerData = new String[2];// 0.ipv4 1.端口号
     private Long mID = 0L;
     private List<MessageInfor> datas = new ArrayList<MessageInfor>();
     private SimpleDateFormat simpleDateFormat;
@@ -81,7 +80,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if (msg.what == 1) {
-                    titleView.setText(titletext);
+                    titleView.setText(titleText);
                 } else if (msg.what == 2) {
                     titleView.setText("当前在线人数[" + (allOut.size() + 1) + "]");
                 }
@@ -160,9 +159,9 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                         .setPositiveButton("连接", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ConnectServerData[0] = editIpv4Text.getText().toString();
-                                ConnectServerData[1] = editPortText.getText().toString();
-                                Toast.makeText(ChatRoomActivity.this, "正在连接服务器" + ConnectServerData[0] + ":" + ConnectServerData[1]
+                                connectServerData[0] = editIpv4Text.getText().toString();
+                                connectServerData[1] = editPortText.getText().toString();
+                                Toast.makeText(ChatRoomActivity.this, "正在连接服务器" + connectServerData[0] + ":" + connectServerData[1]
                                         , Toast.LENGTH_SHORT).show();
 
                                 boolean isConnected = ConnectSever();
@@ -398,7 +397,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
 //                            datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
 //                        }
 
-                        titletext = json.optString("peoplen", "当前在线人数[未知]"); // 使用optString以避免JSONException
+                        titleText = json.optString("peoplen", "当前在线人数[未知]"); // 使用optString以避免JSONException
                         handler.sendEmptyMessage(1);
 
                         //messageAdapter.notifyDataSetChanged();//通知数据源发生变化
@@ -445,7 +444,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                     public void run() {
                         try {
                             //localhost 127.0.0.1
-                            socket = new Socket(ConnectServerData[0], Integer.valueOf(ConnectServerData[1]));
+                            socket = new Socket(connectServerData[0], Integer.valueOf(connectServerData[1]));
                             mID = System.currentTimeMillis();
                         } catch (Exception e) {
                             isConnected = false;
@@ -536,7 +535,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                                 }
                             });
 
-                            titletext = json.optString("peoplen", "当前在线人数[未知]");
+                            titleText = json.optString("peoplen", "当前在线人数[未知]");
                             handler.sendEmptyMessage(1); // 可能需要更新UI，例如标题
                         }
                     } catch (JSONException e) {
@@ -607,23 +606,9 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
 
             //初始化holder
             if (view == null) {
-                view = LayoutInflater.from(ChatRoomActivity.this).inflate(R.layout.chart_item, null);
+                view = LayoutInflater.from(ChatRoomActivity.this).inflate(R.layout.chat_item, null);
                 holder = new MessageHolder();
-                // 初始化控件
-                holder.lefttime = view.findViewById(R.id.itemtimeleft);
-                holder.righttime = view.findViewById(R.id.itemtimeright);
-                holder.left = view.findViewById(R.id.itemleft);
-                holder.right = view.findViewById(R.id.itemright);
-                holder.rightimgtime = view.findViewById(R.id.rightimgtime);
-                holder.leftimgtime = view.findViewById(R.id.leftimgtime);
-                holder.rightimg = view.findViewById(R.id.rightimg);
-                holder.leftimg = view.findViewById(R.id.leftimg);
-
-                holder.avatarRight = view.findViewById(R.id.avatarRight);
-                holder.avatarLeft = view.findViewById(R.id.avatarLeft);
-                holder.usernameRight = view.findViewById(R.id.usernameRight);
-                holder.usernameLeft = view.findViewById(R.id.usernameLeft);
-
+                holder.init(view);  // 初始化控件
                 view.setTag(holder);
             } else {
                 holder = (MessageHolder) view.getTag();
@@ -631,91 +616,56 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
 
             MessageInfor mi = getItem(i);
 
-            //显示
-            if (mi.getUserID() == mID) {
-                //id相等,自己发送的消息
+            holder.resetViews();
 
-                holder.usernameRight.setVisibility(View.VISIBLE); // 显示用户名
-                holder.usernameRight.setText("我"); //发送方用户名
-                holder.usernameRight.setText(mi.getUsername()); // 使用实际的用户名
-
-                holder.avatarRight.setVisibility(View.VISIBLE); // 显示头像
-                holder.avatarRight.setImageResource(R.drawable.cc_face); // 设置头像图标
-
-                if (mi.getType().equals("0")) {
-                    //图片
-                    holder.rightimgtime.setVisibility(View.VISIBLE);
-                    holder.rightimg.setVisibility(View.VISIBLE);
-                    holder.rightimgtime.setText(simpleDateFormat.format(new Date(mi.getTime())));
-                    holder.rightimg.setImageBitmap(convertStringToIcon(mi.getMsg()));
-
-                    // 隐藏左侧布局
-                    hideLeftViews(holder);
-
-                } else if (mi.getType().equals("1")) {
-                    // 文字消息
-                    holder.righttime.setVisibility(View.VISIBLE);
-                    holder.right.setVisibility(View.VISIBLE);
-                    holder.righttime.setText(simpleDateFormat.format(new Date(mi.getTime())));
-                    holder.right.setText(mi.getMsg());
-
-                    // 隐藏左侧布局
-                    hideLeftViews(holder);
-                }
-
-
-            } else {
-                // 别人的消息，需要显示左侧的布局
-                holder.usernameLeft.setVisibility(View.VISIBLE); // 显示用户名
-                holder.usernameLeft.setText("别人"); // 其他人的用户名
-                holder.usernameLeft.setText(mi.getUsername()); // 使用实际的用户名
-
-                holder.avatarLeft.setVisibility(View.VISIBLE); // 显示头像
-                holder.avatarLeft.setImageResource(R.drawable.cc_face); // 设置头像图标
-
-                if (mi.getType().equals("0")) {
-                    // 图片消息
-                    holder.leftimgtime.setVisibility(View.VISIBLE);
-                    holder.leftimg.setVisibility(View.VISIBLE);
-                    holder.leftimgtime.setText(simpleDateFormat.format(new Date(mi.getTime())));
-                    holder.leftimg.setImageBitmap(convertStringToIcon(mi.getMsg()));
-
-                    // 隐藏右侧布局
-                    hideRightViews(holder);
-
-                } else if (mi.getType().equals("1")) {
-                    // 文字消息
-                    holder.lefttime.setVisibility(View.VISIBLE);
-                    holder.left.setVisibility(View.VISIBLE);
-                    holder.lefttime.setText(simpleDateFormat.format(new Date(mi.getTime())));
-                    holder.left.setText(mi.getMsg());
-
-                    // 隐藏右侧布局
-                    hideRightViews(holder);
-                }
+            // 设置视图内容
+            if (mi.getUserID() == mID) {  // 自己的消息
+                setupMyMessage(holder, mi);
+            } else {  // 别人的消息
+                setupOtherMessage(holder, mi);
             }
 
             return view;
         }
 
-        // 隐藏左侧布局
-        private void hideLeftViews(MessageHolder holder) {
-            holder.lefttime.setVisibility(View.GONE);
-            holder.left.setVisibility(View.GONE);
-            holder.leftimgtime.setVisibility(View.GONE);
-            holder.leftimg.setVisibility(View.GONE);
-            holder.usernameLeft.setVisibility(View.GONE);
-            holder.avatarLeft.setVisibility(View.GONE);
+        private void setupMyMessage(MessageHolder holder, MessageInfor mi) {
+            holder.usernameRight.setText(mi.getUsername());
+            holder.avatarRight.setImageResource(R.drawable.cc_face);
+
+            if (mi.getType().equals("0")) {  // 图片
+                holder.rightTime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                holder.rightTime.setVisibility(View.VISIBLE);
+                holder.rightImg.setImageBitmap(convertStringToIcon(mi.getMsg()));
+                holder.rightImg.setVisibility(View.VISIBLE);
+            } else {  // 文字
+                holder.right.setText(mi.getMsg());
+                holder.rightTime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                holder.right.setVisibility(View.VISIBLE);
+                holder.rightTime.setVisibility(View.VISIBLE);
+            }
+
+            holder.usernameRight.setVisibility(View.VISIBLE);
+            holder.avatarRight.setVisibility(View.VISIBLE);
         }
 
-        // 隐藏右侧布局
-        private void hideRightViews(MessageHolder holder) {
-            holder.righttime.setVisibility(View.GONE);
-            holder.right.setVisibility(View.GONE);
-            holder.rightimgtime.setVisibility(View.GONE);
-            holder.rightimg.setVisibility(View.GONE);
-            holder.usernameRight.setVisibility(View.GONE);
-            holder.avatarRight.setVisibility(View.GONE);
+        private void setupOtherMessage(MessageHolder holder, MessageInfor mi) {
+            holder.usernameLeft.setText(mi.getUsername());
+            holder.avatarLeft.setImageResource(R.drawable.cc_face);
+
+            if (mi.getType().equals("0")) {  // 图片
+                holder.leftImg.setImageBitmap(convertStringToIcon(mi.getMsg()));
+                holder.leftTime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                holder.leftImg.setVisibility(View.VISIBLE);
+                holder.leftTime.setVisibility(View.VISIBLE);
+            } else {  // 文字
+                holder.left.setText(mi.getMsg());
+                holder.leftTime.setText(simpleDateFormat.format(new Date(mi.getTime())));
+                holder.left.setVisibility(View.VISIBLE);
+                holder.leftTime.setVisibility(View.VISIBLE);
+            }
+
+            holder.usernameLeft.setVisibility(View.VISIBLE);
+            holder.avatarLeft.setVisibility(View.VISIBLE);
         }
     }
 
@@ -723,75 +673,101 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
     class MessageHolder {
         public TextView left; // 左侧消息文本
         public TextView right; // 右侧消息文本
-        public TextView lefttime; // 左侧消息时间
-        public TextView righttime; // 右侧消息时间
-        public TextView rightimgtime; // 右侧图片消息时间
-        public TextView leftimgtime; // 左侧图片消息时间
-        public ImageView rightimg; // 右侧图片
-        public ImageView leftimg; // 左侧图片
+        public TextView leftTime; // 左侧消息时间
+        public TextView rightTime; // 右侧消息时间
+        public TextView rightImgTime; // 右侧图片消息时间
+        public TextView leftImgTime; // 左侧图片消息时间
+        public ImageView rightImg; // 右侧图片
+        public ImageView leftImg; // 左侧图片
 
         public ImageView avatarRight; // 右侧头像
         public ImageView avatarLeft; // 左侧头像
         public TextView usernameRight; // 右侧用户名
         public TextView usernameLeft; // 左侧用户名
+
+
+        public void init(View view) {
+            // 使用view.findViewById来初始化每个控件
+            left = (TextView) view.findViewById(R.id.itemleft);
+            right = (TextView) view.findViewById(R.id.itemright);
+            leftTime = (TextView) view.findViewById(R.id.itemtimeleft);
+            rightTime = (TextView) view.findViewById(R.id.itemtimeright);
+            leftImgTime = (TextView) view.findViewById(R.id.leftimgtime);
+            rightImgTime = (TextView) view.findViewById(R.id.rightimgtime);
+            leftImg = (ImageView) view.findViewById(R.id.leftimg);
+            rightImg = (ImageView) view.findViewById(R.id.rightimg);
+            avatarRight = (ImageView) view.findViewById(R.id.avatarRight);
+            avatarLeft = (ImageView) view.findViewById(R.id.avatarLeft);
+            usernameRight = (TextView) view.findViewById(R.id.usernameRight);
+            usernameLeft = (TextView) view.findViewById(R.id.usernameLeft);
+        }
+
+        public void resetViews() {
+            // 控件的显示状态重置
+            left.setVisibility(View.GONE);
+            right.setVisibility(View.GONE);
+            rightImg.setVisibility(View.GONE);
+            leftImg.setVisibility(View.GONE);
+            leftTime.setVisibility(View.GONE);
+            rightTime.setVisibility(View.GONE);
+            rightImgTime.setVisibility(View.GONE);
+            leftImgTime.setVisibility(View.GONE);
+            usernameRight.setVisibility(View.GONE);
+            usernameLeft.setVisibility(View.GONE);
+            avatarRight.setVisibility(View.GONE);
+            avatarLeft.setVisibility(View.GONE);
+        }
     }
 
 
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        //获取图片路径
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
-            String[] filePathColumns = {MediaStore.Images.Media.DATA};
-            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
-            c.moveToFirst();
-            int columnIndex = c.getColumnIndex(filePathColumns[0]);
-
-            String imagePath = c.getString(columnIndex);
-
-            activityImage(imagePath);
-            c.close();
+            if (selectedImage != null) {
+                activityImage(selectedImage);
+            } else {
+                Toast.makeText(this, "图片获取失败", Toast.LENGTH_SHORT).show();
+            }
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
     /**
      * 处理图片发送
-     *
-     * @param imagePath 图片路径
      */
     @SuppressLint("DefaultLocale")
-    private void activityImage(String imagePath) {
+    private void activityImage(Uri imageUri) {
         SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "unknown");
+        Bitmap bm = null;
+        try {
+            bm = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+            if (bm != null) {
+                bm = resizeBitmap(bm, 400, 400, true);
+                long Ltimes = System.currentTimeMillis();
+                String imgString = convertIconToString(bm);
+                imgString = imgString.replace("\n", "");
 
-        Bitmap bm = BitmapFactory.decodeFile(imagePath);
-        if (bm == null) {
-            // 处理图片加载失败的情况，例如显示错误消息或使用默认图片
-            Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show();
-            return; // 直接返回，避免后续操作
+                datas.add(new MessageInfor(imgString, Ltimes, mID, "0", username));
+
+                if (isServer) {
+                    sendMessage(String.format("{\"isimg\":\"0\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",
+                            imgString, Ltimes, mID, username));
+                } else {
+                    userSendMsg = String.format("{\"isimg\":\"0\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",
+                            imgString, Ltimes, mID, username);
+
+                    //userSendMsgQueue.add(userSendMsg);
+                }
+            } else {
+                Toast.makeText(this, "图片加载失败", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "错误读取图片", Toast.LENGTH_SHORT).show();
         }
-
-        bm = resizeBitmap(bm, 400, 400, true);
-        long Ltimes = System.currentTimeMillis();
-        String imgString = convertIconToString(bm);
-        imgString = imgString.replace("\n", "");
-
-        datas.add(new MessageInfor(imgString, Ltimes, mID, "0", username));
-
-        if (isServer) {
-            //服务器
-            sendMessage(String.format("{\"isimg\":\"0\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",
-                    imgString, Ltimes, mID, username));
-        } else {
-            //客户端
-            userSendMsg = String.format("{\"isimg\":\"0\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",
-                    imgString, Ltimes, mID, username);
-        }
-
-
     }
+
 
     /**
      * 图片转成string
@@ -868,8 +844,6 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
 
         return scalingN;
     }
-
-
 
 
 }

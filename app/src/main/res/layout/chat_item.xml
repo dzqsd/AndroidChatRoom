@@ -60,6 +60,14 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:textColor="#A7A9AA"/>
+    <!-- 右侧图片的时间 -->
+    <TextView
+            android:id="@+id/rightimgtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rightimg"
+            android:gravity="center"
+            android:textColor="#A7A9AA"/>
 
     <!-- 右侧的消息文本 -->
     <TextView
@@ -71,14 +79,6 @@
             android:layout_marginEnd="50dp"
             android:background="@drawable/item_right"/>
 
-    <!-- 右侧图片的时间 -->
-    <TextView
-            android:id="@+id/rightimgtime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rightimg"
-            android:gravity="center"
-            android:textColor="#A7A9AA"/>
 
     <!-- 右侧的图片 -->
     <ImageView
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/itemtimeright"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="50dp"/>
 
 
     <!-- 左侧消息的时间 -->
@@ -97,6 +97,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="#A7A9AA"/>
+
+    <!-- 左侧图片的时间 -->
+    <TextView
+            android:id="@+id/leftimgtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/leftimg"
             android:gravity="center"
             android:textColor="#A7A9AA"/>
 
@@ -111,15 +120,6 @@
             android:background="@drawable/item_left"/>
 
 
-    <!-- 左侧图片的时间 -->
-    <TextView
-            android:id="@+id/leftimgtime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/leftimg"
-            android:gravity="center"
-            android:textColor="#A7A9AA"/>
-
     <!-- 左侧的图片 -->
     <ImageView
             android:id="@+id/leftimg"
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/itemtimeleft"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="50dp"/>
 
 
 </RelativeLayout>

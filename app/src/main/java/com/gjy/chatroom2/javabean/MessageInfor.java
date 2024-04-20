@@ -1,5 +1,7 @@
 package com.gjy.chatroom2.javabean;
 
+import static java.lang.Math.min;
+
 public class MessageInfor {
     private int ID;
     private String msg;
@@ -69,5 +71,17 @@ public class MessageInfor {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageInfor{" +
+                "ID=" + ID +
+                ", msg='" + msg.substring(0, min(20, msg.length() - 1) ) + '\'' +
+                ", time=" + time +
+                ", userID=" + userID +
+                ", type='" + type + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

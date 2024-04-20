@@ -526,12 +526,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public View getView(int i, View view, ViewGroup viewGroup) {
             MessageHolder holder = null;
             if (view == null) {
-                view = LayoutInflater.from(MainActivity.this).inflate(R.layout.chart_item, null);
+                view = LayoutInflater.from(MainActivity.this).inflate(R.layout.chat_item, null);
                 holder = new MessageHolder();
                 holder.left = (TextView) view.findViewById(R.id.itemleft);
                 holder.right = (TextView) view.findViewById(R.id.itemright);
                 holder.lefttime = (TextView) view.findViewById(R.id.itemtimeleft);
-                holder.righttime = (TextView) view.findViewById(R.id.itemtimeright);
+                //holder.righttime = (TextView) view.findViewById(R.id.itemtimeright);
 
                 holder.rightimgtime = (TextView) view.findViewById(R.id.rightimgtime);
                 holder.leftimgtime = (TextView) view.findViewById(R.id.leftimgtime);
