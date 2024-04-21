@@ -1,6 +1,8 @@
 package com.gjy.chatroom2.activities;
 
 import android.content.SharedPreferences;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,12 +26,12 @@ import io.agora.rtc2.ChannelMediaOptions;
 
 public class VideoChatActivity extends AppCompatActivity {
 
-    // 填写项目的 App ID，可在声网控制台中生成
+    // 项目的 App ID，可在声网控制台中生成
     private String appId = "dc06c3be8bc74c8d830fbff83eb4635d";
-    // 填写频道名
+    // 频道名
     private String channelName = "gjy";
 
-    // 填写声网控制台中生成的临时 Token,通过VideoFragment中的输入Token获取
+    // 声网控制台中生成的临时 Token,通过VideoFragment中的输入Token获取
     private String token ;
     private SharedPreferences mSharedPreferences;
 
@@ -140,6 +142,16 @@ public class VideoChatActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, getRequiredPermissions(), PERMISSION_REQ_ID);
         }
+
+        //切换前后置摄像头
+        ImageButton switchCameraButton = findViewById(R.id.btn_switch_camera);
+        switchCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRtcEngine.switchCamera();
+                Toast.makeText(VideoChatActivity.this, "切换摄像头", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
