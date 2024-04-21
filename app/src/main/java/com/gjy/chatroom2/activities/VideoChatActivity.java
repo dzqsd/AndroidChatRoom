@@ -152,6 +152,19 @@ public class VideoChatActivity extends AppCompatActivity {
                 Toast.makeText(VideoChatActivity.this, "切换摄像头", Toast.LENGTH_SHORT).show();
             }
         });
+
+        //挂断
+        ImageButton hangOff = findViewById(R.id.btn_hangOff);
+        hangOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRtcEngine.leaveChannel();
+                // 停止本地视频预览
+                mRtcEngine.stopPreview();
+                Toast.makeText(VideoChatActivity.this, "通话已挂断", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     @Override
@@ -163,5 +176,12 @@ public class VideoChatActivity extends AppCompatActivity {
 
         // 离开频道
         mRtcEngine.leaveChannel();
+
+        if (mRtcEngine != null) {
+            mRtcEngine.stopPreview();
+            mRtcEngine.leaveChannel();
+            RtcEngine.destroy();  // 若无后续需要，释放 RtcEngine
+            mRtcEngine = null;
+        }
     }
 }

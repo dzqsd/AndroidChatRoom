@@ -15,12 +15,43 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
     <FrameLayout
             android:id="@+id/remote_video_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:background="@android:color/white"/>
+            android:background="@android:color/white" tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="-28dp">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal|bottom"
+                android:layout_marginTop="550dp"
+        >
+
+            <ImageButton
+                    android:id="@+id/btn_hangOff"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/baseline_phone_disabled_24"
+                    android:contentDescription="挂断"
+                    />
+
+            <ImageButton
+                    android:id="@+id/btn_switch_camera"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/baseline_change_circle_24"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="切换前后置摄像头"
+                    android:layout_marginStart="70dp"/>
+
+
+        </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
             android:id="@+id/local_video_view_container"
@@ -31,19 +62,6 @@
             android:background="@android:color/darker_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageButton
-            android:id="@+id/btn_switch_camera"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/baseline_change_circle_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="400dp"
-            android:padding="10dp"
-            android:contentDescription="切换前后置摄像头"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
