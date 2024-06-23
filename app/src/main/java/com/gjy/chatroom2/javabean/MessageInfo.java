@@ -2,7 +2,7 @@ package com.gjy.chatroom2.javabean;
 
 import static java.lang.Math.min;
 
-public class MessageInfor {
+public class MessageInfo {
     private int ID;
     private String msg;
     private Long time;
@@ -10,7 +10,7 @@ public class MessageInfor {
     private String type;
     private String username;
 
-    public MessageInfor(String msg, Long time, Long userID, String type, String username) {
+    public MessageInfo(String msg, Long time, Long userID, String type, String username) {
         this.msg = msg;
         this.time = time;
         this.userID = userID;
@@ -18,7 +18,7 @@ public class MessageInfor {
         this.username = username;
     }
 
-    public MessageInfor(String msg, Long time, Long userID, String type) {
+    public MessageInfo(String msg, Long time, Long userID, String type) {
         this.msg = msg;
         this.time = time;
         this.userID = userID;

@@ -28,7 +28,7 @@ import com.gjy.chatroom2.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.gjy.chatroom2.javabean.MessageInfor;
+import com.gjy.chatroom2.javabean.MessageInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String message = "", userSendMsg = "", titletext = "";
     private String[] ConnectServerData = new String[2];// 0.ipv4 1.端口号
     private Long mID = 0L;
-    private List<MessageInfor> datas = new ArrayList<MessageInfor>();
+    private List<MessageInfo> datas = new ArrayList<MessageInfo>();
     private SimpleDateFormat simpleDateFormat;
     private MessageAdapter messageAdapter;
     private static Socket socket = null;//用于与服务端通信的Socket
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     long Ltimes = System.currentTimeMillis();
                     message = sendMessageText.getText().toString();
-                    datas.add(new MessageInfor(message, Ltimes, mID, "1"));
+                    datas.add(new MessageInfo(message, Ltimes, mID, "1"));
                     sendMessage("{\"isimg\":\"1\",\"msg\":\"" + message + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\",\"peoplen\":\"" + "当前在线人数[" + (allOut.size() + 1) + "]" + "\"}");
 
                     //清空输入框文字
@@ -342,10 +342,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JSONObject json = new JSONObject(message);
                         if (json.getString("isimg").equals("1")) {
                             //不为图片
-                            datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
+                            datas.add(new MessageInfo(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
                         } else if (json.getString("isimg").equals("0")) {
                             //图片
-                            datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
+                            datas.add(new MessageInfo(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
                         }
                         titletext = json.getString("peoplen");
                         handler.sendEmptyMessage(1);
@@ -465,9 +465,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JSONObject json = new JSONObject(message1);
                         if (json.getLong("id") != mID) {
                             if (json.getString("isimg").equals("1")) {//不为图片
-                                datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
+                                datas.add(new MessageInfo(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "1"));
                             } else if (json.getString("isimg").equals("0")) {//为图片
-                                datas.add(new MessageInfor(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
+                                datas.add(new MessageInfo(json.getString("msg"), Long.valueOf(json.getString("times")), Long.valueOf(json.getString("id")), "0"));
                             }
                         }
                         titletext = json.getString("peoplen");
@@ -496,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         long Ltimes = System.currentTimeMillis();
-        MessageInfor m = new MessageInfor(message, Ltimes, mID, "1");//消息 时间戳 id
+        MessageInfo m = new MessageInfo(message, Ltimes, mID, "1");//消息 时间戳 id
         userSendMsg = "{\"isimg\":\"1\",\"msg\":\"" + sendMessageText.getText().toString() + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\"}";
         datas.add(m);
         messageAdapter.notifyDataSetChanged();//通知数据源发生变化
@@ -512,7 +512,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public MessageInfor getItem(int i) {
+        public MessageInfo getItem(int i) {
             return datas.get(i);
         }
 
@@ -542,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 holder = (MessageHolder) view.getTag();
             }
-            MessageInfor mi = getItem(i);
+            MessageInfo mi = getItem(i);
             //显示
             if (mi.getUserID() == mID) {
                 //id相等
@@ -655,7 +655,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         long Ltimes = System.currentTimeMillis();
         String imgString = convertIconToString(bm);
         imgString = imgString.replace("\n", "");
-        datas.add(new MessageInfor(imgString, Ltimes, mID, "0"));
+        datas.add(new MessageInfo(imgString, Ltimes, mID, "0"));
 
         if (isServer) {
             //服务器

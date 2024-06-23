@@ -29,7 +29,7 @@ import com.gjy.chatroom2.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.gjy.chatroom2.javabean.MessageInfor;
+import com.gjy.chatroom2.javabean.MessageInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +53,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
     private String message = "", userSendMsg = "", titleText = "";
     private String[] connectServerData = new String[2];// 0.ipv4 1.端口号
     private Long mID = 0L;
-    private List<MessageInfor> datas = new ArrayList<MessageInfor>();
+    private List<MessageInfo> datas = new ArrayList<MessageInfo>();
     private SimpleDateFormat simpleDateFormat;
     private MessageAdapter messageAdapter;
     private static Socket socket = null;//用于与服务端通信的Socket
@@ -193,7 +193,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
 
                 if (isServer) {
                     //服务器
-                    MessageInfor m = new MessageInfor(message, Ltimes, mID, "1", username);
+                    MessageInfo m = new MessageInfo(message, Ltimes, mID, "1", username);
                     datas.add(m);
 
                     //sendMessage("{\"isimg\":\"1\",\"msg\":\"" + message + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\",\"peoplen\":\"" + "当前在线人数[" + (allOut.size() + 1) + "]" + "\"}");
@@ -377,10 +377,10 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                         String username = json.optString("username", "unknown"); // 使用optString以避免JSONException
 
                         // 根据消息类型创建MessageInfor对象，现在包括username参数
-                        MessageInfor m = new MessageInfor(msgContent, times, id, messageType, username);
+                        MessageInfo m = new MessageInfo(msgContent, times, id, messageType, username);
 
                         // 更新datas列表应在主线程中执行
-                        final MessageInfor finalM = m;
+                        final MessageInfo finalM = m;
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -524,7 +524,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                             String username = json.optString("username", "unknown"); // 解析用户名
 
                             // 根据是否为图片创建MessageInfor对象，现在包括username参数
-                            MessageInfor m = new MessageInfor(msgContent, times, id, messageType, username);
+                            MessageInfo m = new MessageInfo(msgContent, times, id, messageType, username);
 
                             // 由于涉及UI更新，确保在主线程执行
                             handler.post(new Runnable() {
@@ -567,7 +567,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
         String username = sharedPreferences.getString("username", "unknown");
 
         long Ltimes = System.currentTimeMillis();
-        MessageInfor m = new MessageInfor(message, Ltimes, mID, "1", username);
+        MessageInfo m = new MessageInfo(message, Ltimes, mID, "1", username);
         //MessageInfor m = new MessageInfor(message, Ltimes, mID, "1");//消息 时间戳 id
 
         //userSendMsg = "{\"isimg\":\"1\",\"msg\":\"" + sendMessageText.getText().toString() + "\",\"times\":\"" + Ltimes + "\",\"id\":\"" + mID + "\"}";
@@ -590,7 +590,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
         }
 
         @Override
-        public MessageInfor getItem(int i) {
+        public MessageInfo getItem(int i) {
             return datas.get(i);
         }
 
@@ -614,7 +614,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                 holder = (MessageHolder) view.getTag();
             }
 
-            MessageInfor mi = getItem(i);
+            MessageInfo mi = getItem(i);
 
             holder.resetViews();
 
@@ -628,7 +628,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             return view;
         }
 
-        private void setupMyMessage(MessageHolder holder, MessageInfor mi) {
+        private void setupMyMessage(MessageHolder holder, MessageInfo mi) {
             holder.usernameRight.setText(mi.getUsername());
             holder.avatarRight.setImageResource(R.drawable.cc_face);
 
@@ -648,7 +648,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
             holder.avatarRight.setVisibility(View.VISIBLE);
         }
 
-        private void setupOtherMessage(MessageHolder holder, MessageInfor mi) {
+        private void setupOtherMessage(MessageHolder holder, MessageInfo mi) {
             holder.usernameLeft.setText(mi.getUsername());
             holder.avatarLeft.setImageResource(R.drawable.cc_face);
 
@@ -749,7 +749,7 @@ public class ChatRoomActivity extends AppCompatActivity implements View.OnClickL
                 String imgString = convertIconToString(bm);
                 imgString = imgString.replace("\n", "");
 
-                datas.add(new MessageInfor(imgString, Ltimes, mID, "0", username));
+                datas.add(new MessageInfo(imgString, Ltimes, mID, "0", username));
 
                 if (isServer) {
                     sendMessage(String.format("{\"isimg\":\"0\",\"msg\":\"%s\",\"times\":\"%d\",\"id\":\"%d\", \"username\":\"%s\"}",

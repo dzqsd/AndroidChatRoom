@@ -37,9 +37,9 @@ public class WelcomeActivity extends AppCompatActivity {
         banner = findViewById(R.id.banner);
 
         //图片轮播功能
-        mBannerDataInfos.add(new BannerDataInfo(R.drawable.cc_face, "我是cc1"));
-        mBannerDataInfos.add(new BannerDataInfo(R.drawable.cc_face2, "我是cc2"));
-        mBannerDataInfos.add(new BannerDataInfo(R.drawable.cc_face3, "我是cc3"));
+        mBannerDataInfos.add(new BannerDataInfo(R.drawable.dog1, "我是cc1"));
+        mBannerDataInfos.add(new BannerDataInfo(R.drawable.dog2, "我是cc2"));
+        mBannerDataInfos.add(new BannerDataInfo(R.drawable.wechat2, "我是cc3"));
 
         //设置轮播间隔时间
         banner.setLoopTime(3000);//3000毫秒切换一次图片
